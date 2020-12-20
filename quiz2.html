@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 2</title>
+</head>
+<body>
+    <div id="app">
+        <div v-show="modal.show">
+            <div>{{ modal.title }}</div>
+                <div>
+                    <button @click="deleteUser">Iya</button>
+                    <button @click="modal.show = false">Tidak</button>
+                </div>
+        </div>
+        <br>
+        <form action="" @submit.prevent="submitMethod">
+            <div>
+                <input v-model="inputUser" type="text" id="add-data">
+                <button type="submit">{{ textButton }}</button>
+            </div>
+        </form>
+        <div>
+            <ul>
+                <li v-for="(user, index) in users">
+                    <div>
+                        <p>{{ user.name }}</p>
+                        <button @click="editUser(index)">Edit</button> || <button @click="showDeleteModal(index)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script>
+        var vm = new Vue ({
+            el: "#app",
+
+            data() {
+                return {
+                    inputUser: '',
+                    textButton: 'add',
+                    userIndexEdit: 0,
+                    userIndexDelete: 0,
+                    users: [
+                        {
+                            'name' : 'Muhammad Iqbal Mubarok',
+                        },
+                        {
+                            'name' : 'Ruby Purwanti',
+                        },
+                        {
+                            'name' : 'Faqih Muhammad',
+                        },
+                    ],
+                    modal : {
+                        'show': false,
+                    }
+                }
+            },
+
+            methods: {
+                submitMethod(){
+                    if( this.textButton === 'add' ) this.addUser()
+                    if( this.textButton === 'update' ) this.updateUser()
+                },
+
+                addUser() {
+                    this.users.push({ 'name': this.inputUser })
+                    this.inputUser = ''
+                },
+
+                editUser(index) {
+                    this.textButton = 'update'
+                    this.userIndexEdit = index
+                    this.inputUser = this.users[index].name
+                },
+
+                updateUser() {
+                    this.users[this.userIndexEdit].name = this.inputUser
+                    this.inputUser = ''
+                    this.textButton = 'add'
+                },
+
+                showDeleteModal(index) {
+                    this.modal.show = true
+                    this.userIndexDelete = index
+                    this.modal.title = 'Hapus data?' 
+                },
+
+                deleteUser(index){
+                    this.users.splice(this.userIndexDelete, 1)
+                    this.modal.show = false
+                },
+            },
+        })
+    </script>
+</body>
+</html>
